@@ -1,0 +1,33 @@
+*
+{
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+body {
+	text-align: center;
+	background: white;
+}
+img {
+	max-width: 100%;
+}
+body #main{
+	text-align: center;
+	background: red;
+}
+body #second{
+	text-align: center;
+	background: white;
+}
+body #third{
+	text-align: center;
+	background: black;
+}
+body #fourth{
+	text-align: center;
+	background: green;
+}
+body #fifth{
+	text-align: center;
+	background: yellow;
+}

@@ -21,6 +21,7 @@ burhaniFlicks.distance;
 burhaniFlicks.velocity;
 
 $(document).on('pageshow','.ui-page',function(){
+	$(this).attr('style','');
 	var $currentPage = $(this);
 	var $nextPage = $currentPage.next();
 	var $prevPage = $currentPage.prev();
@@ -33,9 +34,11 @@ $(document).on('pageshow','.ui-page',function(){
 		left : '-1024px',
 		position: 'absolute'
 	});
-	$prevPage.show();
-	$nextPage.show();
-	console.log('hi');
+	if($prevPage.attr('id')!=undefined)
+		$prevPage.show();
+	if($nextPage.attr('id')!=undefined)
+		$nextPage.show();
+	console.log('Pages loaded');
 
 }).on('touchstart','.ui-page',function(e){
 		burhaniFlicks.startPosition = e.originalEvent.touches[0].pageX;
@@ -85,6 +88,7 @@ $(document).on('pageshow','.ui-page',function(){
 		if($currentPage.attr('id')===$.mobile.firstPage)
 		{
 			//we cannot move in the negative direction, snap back to place.
+			console.log(burhaniFlicks.lastPosition);
 			if(positionOfPage>0)
 			{
 				$(this).css({
@@ -108,7 +112,7 @@ $(document).on('pageshow','.ui-page',function(){
 				});
 				$(this).hide();
 				$(this).prev().hide();
-				$.mobile.changePage($nextPage, { transition: "slide", reverse: false});
+				$.mobile.changePage($nextPage, { transition: "fade", reverse: false});
 				return; //leave method.
 			}
 		}
@@ -138,9 +142,10 @@ $(document).on('pageshow','.ui-page',function(){
 				});
 				$(this).hide();
 				$(this).prev().hide();
-				$.mobile.changePage($prevPage, { transition: "slide", reverse: true});
+				$.mobile.changePage($prevPage, { transition: "fade", reverse: true});
 				return; //leave method.
 			}
+			console.log('we jumped out!');
 		}
 		else
 		{
@@ -157,7 +162,7 @@ $(document).on('pageshow','.ui-page',function(){
 				});
 				$(this).hide();
 				$(this).next().hide();
-				$.mobile.changePage($prevPage, { transition: "slide", reverse: true});
+				$.mobile.changePage($prevPage, { transition: "fade", reverse: true});
 				return;
 			} //otherwise switch in positive direction.
 			else
@@ -173,7 +178,7 @@ $(document).on('pageshow','.ui-page',function(){
 				});
 				$(this).hide();
 				$(this).prev().hide();
-				$.mobile.changePage($nextPage, { transition: "slide", reverse: false});
+				$.mobile.changePage($nextPage, { transition: "fade", reverse: false});
 				return; //leave method.
 			}
 		}
@@ -203,4 +208,4 @@ $(document).on('pageshow','.ui-page',function(){
 	$(this).prev().css({
 		'-webkit-transform' : 'translateX('+displacement+'px)'
 	});
-});;
+});
