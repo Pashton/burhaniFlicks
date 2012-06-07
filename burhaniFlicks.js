@@ -53,15 +53,17 @@ $(document).on('pageshow','.ui-page',function(){
 }).on('touchmove','.ui-page',function(e){
 
 	//keeps track of variable velocity.
+
+	burhaniFlicks.varVelocity = (Math.abs(burhaniFlicks.lastPosition - e.originalEvent.touches[0].pageX))/((new Date()).getTime() -
+	burhaniFlicks.prevTime);
+	burhaniFlicks.velocityArr.push(burhaniFlicks.varVelocity);
+	
+	console.log('current velocity: ' + burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length -1]);
+
 	setTimeout(function(){
-
 		burhaniFlicks.isSwipe = false;
-		burhaniFlicks.varVelocity = (Math.abs(burhaniFlicks.lastPosition - e.originalEvent.touches[0].pageX))/((new Date()).getTime() -
-			burhaniFlicks.prevTime);
-		burhaniFlicks.velocityArr.push(burhaniFlicks.varVelocity);
-		console.log('last velocity: ' + burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length -1]);
-
 	},50);
+
 	//END variable velocity.
 	burhaniFlicks.prevTime = (new Date()).getTime();
 
@@ -94,6 +96,7 @@ $(document).on('pageshow','.ui-page',function(){
 	if(burhaniFlicks.isSwipe)
 	{
 		burhaniFlicks.startPosition > burhaniFlicks.lastPosition ? $currentPage.trigger('leftflick') : $currentPage.trigger('rightflick');
+		return;
 	}
 	//Switch pages if we are past these points for the page itself and not the position of the touch.
 	else if( positionOfPage < -512 || positionOfPage > 512 )
