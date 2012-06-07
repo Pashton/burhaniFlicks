@@ -72,7 +72,7 @@ $(document).on('pageshow','.ui-page',function(){
 	var displacement;
 	if(burhaniFlicks.isSwipe)
 	{
-		burhaniFlicks.startPosition > burhaniFlicks.lastPosition ? $currentPage.trigger('flickleft') : $currentPage.trigger('flickright');
+		burhaniFlicks.startPosition > burhaniFlicks.lastPosition ? $currentPage.trigger('leftflick') : $currentPage.trigger('rightflick');
 	}
 	//Switch pages if we are past these points for the page itself and not the position of the touch.
 	else if( positionOfPage < -512 || positionOfPage > 512 )
@@ -122,19 +122,16 @@ $(document).on('pageshow','.ui-page',function(){
 			if(positionOfPage<0)
 			{
 				$(this).css({
-				'-webkit-transform' : ''
+				'-webkit-transform' : '0px'
 				});
-				$(this).next().css({
-				'-webkit-transform' : ''
+				$(this).prev().css({
+				'-webkit-transform' : '-1024px'
 				});
 				return; //leave method
 			} //otherwise switch in positive direction.
 			else
 			{
 				$(this).css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).next().css({
 				'-webkit-transform' : 'translateX('+displacement+'px)',
 				});
 				$(this).prev().css({
@@ -208,4 +205,26 @@ $(document).on('pageshow','.ui-page',function(){
 	$(this).prev().css({
 		'-webkit-transform' : 'translateX('+displacement+'px)'
 	});
+}).on('rightflick', '.ui-page', function(){
+
+		$(this).css({
+		'-webkit-transform' : ''
+		});
+		$(this).next().css({
+		'-webkit-transform' : ''
+		});
+		$(this).prev().css({
+		'-webkit-transform' : ''
+		});
+}).on('leftflick', '.ui-page', function(){
+
+		$(this).css({
+		'-webkit-transform' : ''
+		});
+		$(this).next().css({
+		'-webkit-transform' : ''
+		});
+		$(this).prev().css({
+		'-webkit-transform' : ''
+		});
 });
