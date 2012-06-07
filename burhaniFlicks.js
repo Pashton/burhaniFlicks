@@ -63,6 +63,7 @@ $(document).on('pageshow','.ui-page',function(){
 
 	},50);
 	//END variable velocity.
+	burhaniFlicks.prevTime = (new Date()).getTime();
 
 	burhaniFlicks.lastPosition = e.originalEvent.touches[0].pageX;
 	var displacement = burhaniFlicks.lastPosition - burhaniFlicks.startPosition;
