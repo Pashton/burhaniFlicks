@@ -26,7 +26,7 @@ burhaniFlicks.displacement; //This stores the pixels the object will move
 
 /* PHYSICS LOTS OF HELP FROM LEO JWEDA */
 var u_k = 0.3;
-var g = 0.2;
+var g = 0.9;
 
 //Preload images on both sides. 
 //TODO: cleanup and make sure images that don't exist are not loaded!.
@@ -129,7 +129,7 @@ $(document).on('pageshow','.ui-page',function(){
 		//END
 		
 		//if we are on the first page.
-		if($currentPage.attr('id')===$.mobile.firstPage)
+		if($currentPage.attr('id')===$.mobile.firstPage.attr('id'))
 		{
 			//we cannot move in the negative direction, snap back to place.
 			console.log(burhaniFlicks.lastPosition);
@@ -160,16 +160,16 @@ $(document).on('pageshow','.ui-page',function(){
 				return; //leave method.
 			}
 		}
-		else if($currentPage.attr('id')===$('div[data-role="page"]:last')) //last page.
+		else if($currentPage.attr('id')===$('div[data-role="page"]:last').attr('id')) //last page.
 		{
 			//we cannot move in the negative direction, snap back to place.
 			if(positionOfPage<0)
 			{
 				$(this).css({
-				'-webkit-transform' : '0px'
+				'-webkit-transform' : ''
 				});
 				$(this).prev().css({
-				'-webkit-transform' : '-1024px'
+				'-webkit-transform' : ''
 				});
 				return; //leave method
 			} //otherwise switch in positive direction.
@@ -241,6 +241,12 @@ $(document).on('pageshow','.ui-page',function(){
 }).on('drag','.ui-page',function(){
 
 	var displacement = burhaniFlicks.lastPosition - burhaniFlicks.startPosition;
+	if($(this).attr('id')===$.mobile.firstPage.attr('id') && displacement>512)
+		displacement = 510;
+
+	if( $(this).attr('id') === $('div[data-role="page"]:last').attr('id') && displacement<-512)
+		displacement = 510;
+
 	$(this).css({
 		'-webkit-transform' : 'translateX('+displacement+'px)'
 	});
