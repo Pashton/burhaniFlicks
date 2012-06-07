@@ -24,6 +24,10 @@ burhaniFlicks.varVelocity; //clean up later. should be local.
 burhaniFlicks.velocityArr = []; //This stores the objects velocity as it moves.
 burhaniFlicks.displacement; //This stores the pixels the object will move
 
+/* PHYSICS LOTS OF HELP FROM LEO JWEDA */
+var u_k = 0.3;
+var g = 0.2;
+
 //Preload images on both sides. 
 //TODO: cleanup and make sure images that don't exist are not loaded!.
 $(document).on('pageshow','.ui-page',function(){
@@ -95,7 +99,7 @@ $(document).on('pageshow','.ui-page',function(){
 	burhaniFlicks.distance = Math.abs(burhaniFlicks.startPosition - burhaniFlicks.lastPosition);
 	burhaniFlicks.velocity = burhaniFlicks.distance / (burhaniFlicks.endTime-burhaniFlicks.startTime);
 	var lastVelocity = burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length - 1];
-	burhaniFlicks.displacement = Math.pow(lastVelocity,2)/(2*(0.3)*(0.2));
+	burhaniFlicks.displacement = Math.pow(lastVelocity,2)/(2*u_k*g);
 
 	console.log('End velocity: ' + lastVelocity);
 	console.log('Pixels to animate: '+burhaniFlicks.displacement);
@@ -259,7 +263,7 @@ $(document).on('pageshow','.ui-page',function(){
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
-		
+
 //if it's a simple flick - change page
 //TODO: take velocity and changepage according to velocity speed.
 }).on('leftflick', '.ui-page', function(){
