@@ -19,6 +19,9 @@ burhaniFlicks.startTime;
 burhaniFlicks.endTime;
 burhaniFlicks.distance;
 burhaniFlicks.velocity;
+burhaniFlicks.prevTime;
+burhaniFlicks.varVelocity;
+burhaniFlicks.velocityArr = [];
 
 $(document).on('pageshow','.ui-page',function(){
 	$(this).attr('style','');
@@ -44,13 +47,27 @@ $(document).on('pageshow','.ui-page',function(){
 		burhaniFlicks.startPosition = e.originalEvent.touches[0].pageX;
 		burhaniFlicks.isSwipe = true;
 		burhaniFlicks.startTime = (new Date()).getTime();
+		burhaniFlicks.prevTime = burhaniFlicks.startTime;
+		burhaniFlicks.velocityArr = new Array();
 
 }).on('touchmove','.ui-page',function(e){
+
+	//keeps track of variable velocity.
+	setTimeout(function(){
+
+		burhaniFlicks.isSwipe = false;
+		burhaniFlicks.varVelocity = (Math.abs(burhaniFlicks.lastPosition - e.originalEvent.touches[0].pageX))/((new Date()).getTime() -
+			burhaniFlicks.prevTime);
+		burhaniFlicks.velocityArr.push(burhaniFlicks.varVelocity);
+		console.log('last velocity: ' + burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length -1]);
+
+	},50);
+	//END variable velocity.
 
 	burhaniFlicks.lastPosition = e.originalEvent.touches[0].pageX;
 	var displacement = burhaniFlicks.lastPosition - burhaniFlicks.startPosition;
 	console.log('new position:'+burhaniFlicks.lastPosition);
-	setTimeout(function(){burhaniFlicks.isSwipe = false;},100);
+
 	$(this).trigger('drag');
 	// if(!burhaniFlicks.isSwipe)
 	// {
@@ -62,7 +79,10 @@ $(document).on('pageshow','.ui-page',function(){
 	burhaniFlicks.distance = Math.abs(burhaniFlicks.startPosition - burhaniFlicks.lastPosition);
 	burhaniFlicks.velocity = burhaniFlicks.distance / (burhaniFlicks.endTime-burhaniFlicks.startTime);
 
+	console.log('End velocity: ' + burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length - 2]);
+
 	console.log(burhaniFlicks.velocity);
+	console.log('duration: '+(new Date()).getTime());
 	//involved pages.
 	var $currentPage = $(this);
 	var $nextPage = $currentPage.next();
@@ -206,7 +226,7 @@ $(document).on('pageshow','.ui-page',function(){
 		'-webkit-transform' : 'translateX('+displacement+'px)'
 	});
 }).on('rightflick', '.ui-page', function(){
-
+	console.log('right flick');
 		$(this).css({
 		'-webkit-transform' : ''
 		});
@@ -217,7 +237,7 @@ $(document).on('pageshow','.ui-page',function(){
 		'-webkit-transform' : ''
 		});
 }).on('leftflick', '.ui-page', function(){
-
+	console.log('left flick');
 		$(this).css({
 		'-webkit-transform' : ''
 		});
