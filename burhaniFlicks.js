@@ -11,45 +11,56 @@ Version: 0.2 - still a prototype. Use at your own risk.
 //BurhaniFlicks. global variables.
 burhaniFlicks = new Object();
 
-burhaniFlicks.startPosition;
-burhaniFlicks.lastPosition;
-burhaniFlicks.isSwipe;
+burhaniFlicks.startPosition; //position of object at start.
+burhaniFlicks.lastPosition; //used in touchmove. maintains last pixel position of object.
+burhaniFlicks.isSwipe; //used to see if user trigger a normal swipe (too quick for this lib)
 //END
-burhaniFlicks.startTime;
-burhaniFlicks.endTime;
-burhaniFlicks.distance;
-burhaniFlicks.velocity;
-burhaniFlicks.prevTime;
-burhaniFlicks.varVelocity;
-burhaniFlicks.velocityArr = [];
+burhaniFlicks.startTime; //taken in touchstart.
+burhaniFlicks.endTime; //taken in touchend.
+burhaniFlicks.distance; //total distance travelled by move.
+burhaniFlicks.velocity; //velocity over the whole run.
+burhaniFlicks.prevTime; //Used in touchmove.
+burhaniFlicks.varVelocity; //clean up later. should be local.
+burhaniFlicks.velocityArr = []; //This stores the objects velocity as it moves.
+burhaniFlicks.displacement; //This stores the pixels the object will move
 
+//Preload images on both sides. 
+//TODO: cleanup and make sure images that don't exist are not loaded!.
 $(document).on('pageshow','.ui-page',function(){
+	//modified jquery library that eliminates flickers. this next line is needed.
 	$(this).attr('style','');
+	//Local variables.
 	var $currentPage = $(this);
 	var $nextPage = $currentPage.next();
 	var $prevPage = $currentPage.prev();
 
-	$nextPage.css({
-		left : '1024px',
-		position: 'absolute'
-	});
-	$prevPage.css({
-		left : '-1024px',
-		position: 'absolute'
-	});
+	
+	
 	if($prevPage.attr('id')!=undefined)
+	{
+		$prevPage.css({
+			left : '-1024px',
+			position: 'absolute'
+		});
 		$prevPage.show();
+	}
 	if($nextPage.attr('id')!=undefined)
+	{
+		$nextPage.css({
+			left : '1024px',
+			position: 'absolute'
+		});
 		$nextPage.show();
+	}
 	console.log('Pages loaded');
-
+//touch begins here.
 }).on('touchstart','.ui-page',function(e){
 		burhaniFlicks.startPosition = e.originalEvent.touches[0].pageX;
 		burhaniFlicks.isSwipe = true;
 		burhaniFlicks.startTime = (new Date()).getTime();
 		burhaniFlicks.prevTime = burhaniFlicks.startTime;
 		burhaniFlicks.velocityArr = new Array();
-
+//update variables on move.
 }).on('touchmove','.ui-page',function(e){
 
 	//keeps track of variable velocity.
@@ -76,13 +87,18 @@ $(document).on('pageshow','.ui-page',function(){
 	// {
 	// 	$(this).trigger('drag');
 	// }
+
+//figure out what to do with touchend.
 }).on('touchend','.ui-page',function(){
 	//initialize global variables.
 	burhaniFlicks.endTime = (new Date()).getTime();
 	burhaniFlicks.distance = Math.abs(burhaniFlicks.startPosition - burhaniFlicks.lastPosition);
 	burhaniFlicks.velocity = burhaniFlicks.distance / (burhaniFlicks.endTime-burhaniFlicks.startTime);
+	var lastVelocity = burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length - 1];
+	burhaniFlicks.displacement = Math.pow(lastVelocity,2)/(2*(0.3)*(0.2));
 
-	console.log('End velocity: ' + burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length - 2]);
+	console.log('End velocity: ' + lastVelocity);
+	console.log('Pixels to animate: '+burhaniFlicks.displacement);
 
 	console.log(burhaniFlicks.velocity);
 	console.log('duration: '+(new Date()).getTime());
@@ -217,6 +233,7 @@ $(document).on('pageshow','.ui-page',function(){
 		'-webkit-transform' : ''
 		});
 	}
+	//this function makes object follow drag.
 }).on('drag','.ui-page',function(){
 
 	var displacement = burhaniFlicks.lastPosition - burhaniFlicks.startPosition;
@@ -229,6 +246,8 @@ $(document).on('pageshow','.ui-page',function(){
 	$(this).prev().css({
 		'-webkit-transform' : 'translateX('+displacement+'px)'
 	});
+	//if it's a simple flick - change page
+	//TODO: take velocity and changepage according to velocity speed.
 }).on('rightflick', '.ui-page', function(){
 	console.log('right flick');
 		$(this).css({
@@ -240,6 +259,9 @@ $(document).on('pageshow','.ui-page',function(){
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
+		
+//if it's a simple flick - change page
+//TODO: take velocity and changepage according to velocity speed.
 }).on('leftflick', '.ui-page', function(){
 	console.log('left flick');
 		$(this).css({
