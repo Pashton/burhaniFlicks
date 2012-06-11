@@ -104,6 +104,7 @@ $(document).on('pageshow','.ui-page',function(){
 //figure out what to do with touchend.
 }).on('touchend','.ui-page',function(){
 	//initialize global variables.
+	var style;
 	var currentTime = (new Date()).getTime();
 	var difference = currentTime - endTracking.time;
 	console.log(difference);
@@ -166,19 +167,9 @@ $(document).on('pageshow','.ui-page',function(){
 			} //otherwise switch in positive direction.
 			else
 			{
-				$(this).css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).next().css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).prev().css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).hide();
-				$(this).prev().hide();
-				var style = 'real'+burhaniFlicks.lastPositionOfPage;
-				$.mobile.changePage($nextPage, { transition: "fade", reverse: false});
+				style = 'real-'+(200-burhaniFlicks.lastPositionOfPage);
+				console.log(style);
+				$.mobile.changePage($(this).next(), { transition: style, reverse: false});
 				return; //leave method.
 			}
 		}
@@ -197,7 +188,7 @@ $(document).on('pageshow','.ui-page',function(){
 			} //otherwise switch in positive direction.
 			else
 			{
-				var style = 'real'+burhaniFlicks.lastPositionOfPage;
+				style = 'real'+burhaniFlicks.lastPositionOfPage;
 				$.mobile.changePage($prevPage, { transition: style, reverse: false});
 				return; //leave method.
 			}
@@ -207,34 +198,16 @@ $(document).on('pageshow','.ui-page',function(){
 		{
 			if(positionOfPage>0)
 			{
-				$(this).css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).next().css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).prev().css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).hide();
-				$(this).next().hide();
-				$.mobile.changePage($prevPage, { transition: "fade", reverse: true});
+				style = 'real'+burhaniFlicks.lastPositionOfPage;
+				console.log(style);
+				$.mobile.changePage($(this).prev(), { transition: style, reverse: false});
 				return;
 			} //otherwise switch in positive direction.
 			else
 			{
-				$(this).css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).next().css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).prev().css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).hide();
-				$(this).prev().hide();
-				$.mobile.changePage($nextPage, { transition: "fade", reverse: false});
+				style = 'real-'+(200-burhaniFlicks.lastPositionOfPage);
+				console.log(style);
+				$.mobile.changePage($(this).next(), { transition: style, reverse: false});
 				return; //leave method.
 			}
 		}
@@ -274,19 +247,10 @@ $(document).on('pageshow','.ui-page',function(){
 	burhaniFlicks.lastPositionOfPage = $(this).offset().left;
 	var positionPage = 100-Math.round(((burhaniFlicks.lastPositionOfPage)/1024)*100);
 	burhaniFlicks.lastPositionOfPage = positionPage;
+	console.log('position: '+burhaniFlicks.lastPositionOfPage);
 	//if it's a simple flick - change page
 	//TODO: take velocity and changepage according to velocity speed.
 }).on('rightflick', '.ui-page', function(){
-	console.log('right flick');
-		$(this).css({
-		'-webkit-transform' : ''
-		});
-		$(this).next().css({
-		'-webkit-transform' : ''
-		});
-		$(this).prev().css({
-		'-webkit-transform' : ''
-		});
 		var style = 'real'+burhaniFlicks.lastPositionOfPage;
 		console.log(style);
 		$.mobile.changePage($(this).prev(), { transition: style, reverse: false});
@@ -294,14 +258,7 @@ $(document).on('pageshow','.ui-page',function(){
 //if it's a simple flick - change page
 //TODO: take velocity and changepage according to velocity speed.
 }).on('leftflick', '.ui-page', function(){
-	console.log('left flick');
-		$(this).css({
-		'-webkit-transform' : ''
-		});
-		$(this).next().css({
-		'-webkit-transform' : ''
-		});
-		$(this).prev().css({
-		'-webkit-transform' : ''
-		});
+		var style = 'real-'+(200-burhaniFlicks.lastPositionOfPage);
+		console.log(style);
+		$.mobile.changePage($(this).next(), { transition: style, reverse: false});
 });
