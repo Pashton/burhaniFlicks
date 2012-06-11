@@ -51,7 +51,7 @@ $(document).on('pageshow','.ui-page',function(){
 
 	
 	
-	if($prevPage.attr('id')!=undefined)
+	if($prevPage.attr('id') !== undefined)
 	{
 		$prevPage.css({
 			left : '-1024px',
@@ -59,7 +59,7 @@ $(document).on('pageshow','.ui-page',function(){
 		});
 		$prevPage.show();
 	}
-	if($nextPage.attr('id')!=undefined)
+	if($nextPage.attr('id') !== undefined)
 	{
 		$nextPage.css({
 			left : '1024px',
@@ -74,7 +74,7 @@ $(document).on('pageshow','.ui-page',function(){
 		burhaniFlicks.isSwipe = true;
 		startTracking.time = (new Date()).getTime();
 		burhaniFlicks.prevTime = startTracking.time;
-		burhaniFlicks.velocityArr = new Array();
+		burhaniFlicks.velocityArr = [];
 //update variables on move.
 }).on('touchmove','.ui-page',function(e){
 
