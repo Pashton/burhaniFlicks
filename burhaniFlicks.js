@@ -254,7 +254,13 @@ $(document).on('pageshow','.ui-page',function(){
 	if($(this).attr('id')!==$.mobile.firstPage.attr('id')){
 		var style = 'real'+burhaniFlicks.lastPositionOfPage;
 		console.log(style);
+				$(this).css({
+		'-webkit-transform' : ''
+		});
 		$(this).next().css({
+		'-webkit-transform' : ''
+		});
+		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
 		$.mobile.changePage($(this).prev(), { transition: style, reverse: false});
@@ -278,6 +284,12 @@ $(document).on('pageshow','.ui-page',function(){
 	if($(this).attr('id')!==$('div[data-role="page"]:last').attr('id')){
 		var style = 'real-'+(200-burhaniFlicks.lastPositionOfPage);
 		console.log(style);
+				$(this).css({
+		'-webkit-transform' : ''
+		});
+		$(this).next().css({
+		'-webkit-transform' : ''
+		});
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
