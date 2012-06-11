@@ -9,10 +9,20 @@ Version: 0.2 - still a prototype. Use at your own risk.
 */
 
 //BurhaniFlicks. global variables.
-burhaniFlicks = new Object();
+burhaniFlicks = {};
 
 burhaniFlicks.startPosition; //position of object at start.
 burhaniFlicks.lastPosition; //used in touchmove. maintains last pixel position of object.
+
+startTracking = {
+	position:0,
+	time:0
+};
+endTracking = {
+	position:0,
+	time:0
+};
+
 burhaniFlicks.isSwipe; //used to see if user trigger a normal swipe (too quick for this lib)
 //END
 burhaniFlicks.startTime; //taken in touchstart.
@@ -28,7 +38,7 @@ burhaniFlicks.displacement; //This stores the pixels the object will move
 var u_k = 0.3;
 var g = 0.9;
 
-//Preload images on both sides. 
+//Preload images on both sides.
 //TODO: cleanup and make sure images that don't exist are not loaded!.
 $(document).on('pageshow','.ui-page',function(){
 	//modified jquery library that eliminates flickers. this next line is needed.
@@ -59,32 +69,30 @@ $(document).on('pageshow','.ui-page',function(){
 	console.log('Pages loaded');
 //touch begins here.
 }).on('touchstart','.ui-page',function(e){
-		burhaniFlicks.startPosition = e.originalEvent.touches[0].pageX;
+		startTracking.position = e.originalEvent.touches[0].pageX;
 		burhaniFlicks.isSwipe = true;
-		burhaniFlicks.startTime = (new Date()).getTime();
-		burhaniFlicks.prevTime = burhaniFlicks.startTime;
+		startTracking.time = (new Date()).getTime();
+		burhaniFlicks.prevTime = startTracking.time;
 		burhaniFlicks.velocityArr = new Array();
 //update variables on move.
 }).on('touchmove','.ui-page',function(e){
 
 	//keeps track of variable velocity.
-
-	burhaniFlicks.varVelocity = (Math.abs(burhaniFlicks.lastPosition - e.originalEvent.touches[0].pageX))/((new Date()).getTime() -
+	var currentPosition = e.originalEvent.touches[0].pageX;
+	var getTime = (new Date()).getTime();
+	burhaniFlicks.varVelocity = (burhaniFlicks.lastPosition - currentPosition)/(getTime -
 	burhaniFlicks.prevTime);
 	burhaniFlicks.velocityArr.push(burhaniFlicks.varVelocity);
 	
 	console.log('current velocity: ' + burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length -1]);
 
-	setTimeout(function(){
-		burhaniFlicks.isSwipe = false;
-	},50);
-
 	//END variable velocity.
-	burhaniFlicks.prevTime = (new Date()).getTime();
+	burhaniFlicks.prevTime = getTime;
+	burhaniFlicks.lastPosition = currentPosition;
 
-	burhaniFlicks.lastPosition = e.originalEvent.touches[0].pageX;
-	var displacement = burhaniFlicks.lastPosition - burhaniFlicks.startPosition;
 	console.log('new position:'+burhaniFlicks.lastPosition);
+	endTracking.time = burhaniFlicks.prevTime;
+	endTracking.position = burhaniFlicks.lastPosition;
 
 	$(this).trigger('drag');
 	// if(!burhaniFlicks.isSwipe)
@@ -95,10 +103,22 @@ $(document).on('pageshow','.ui-page',function(){
 //figure out what to do with touchend.
 }).on('touchend','.ui-page',function(){
 	//initialize global variables.
-	burhaniFlicks.endTime = (new Date()).getTime();
-	burhaniFlicks.distance = Math.abs(burhaniFlicks.startPosition - burhaniFlicks.lastPosition);
-	burhaniFlicks.velocity = burhaniFlicks.distance / (burhaniFlicks.endTime-burhaniFlicks.startTime);
+	var currentTime = (new Date()).getTime();
+	var difference = currentTime - endTracking.time;
+	console.log(difference);
+	console.log('current time: ' + currentTime +' end time: ' + endTracking.time);
+	burhaniFlicks.isSwipe = false;
 	var lastVelocity = burhaniFlicks.velocityArr[burhaniFlicks.velocityArr.length - 1];
+
+	if(difference<40){
+		console.log('detected flick');
+		burhaniFlicks.isSwipe = true;
+	}
+	else
+		console.log('detected hold');
+	burhaniFlicks.distance = Math.abs(startTracking.position - burhaniFlicks.lastPosition);
+	burhaniFlicks.velocity = burhaniFlicks.distance / (endTracking.time-startTracking.time);
+	
 	burhaniFlicks.displacement = Math.pow(lastVelocity,2)/(2*u_k*g);
 
 	console.log('End velocity: ' + lastVelocity);
@@ -113,9 +133,9 @@ $(document).on('pageshow','.ui-page',function(){
 	console.log('offset:'+burhaniFlicks.lastPosition);
 	var positionOfPage = $(this).offset().left;
 	var displacement;
-	if(burhaniFlicks.isSwipe)
+	if(burhaniFlicks.isSwipe && burhaniFlicks.isSwipe)
 	{
-		burhaniFlicks.startPosition > burhaniFlicks.lastPosition ? $currentPage.trigger('leftflick') : $currentPage.trigger('rightflick');
+		lastVelocity > 0 ? $currentPage.trigger('leftflick') : $currentPage.trigger('rightflick');
 		return;
 	}
 	//Switch pages if we are past these points for the page itself and not the position of the touch.
@@ -240,12 +260,12 @@ $(document).on('pageshow','.ui-page',function(){
 	//this function makes object follow drag.
 }).on('drag','.ui-page',function(){
 
-	var displacement = burhaniFlicks.lastPosition - burhaniFlicks.startPosition;
+	var displacement = burhaniFlicks.lastPosition - startTracking.position;
 	if($(this).attr('id')===$.mobile.firstPage.attr('id') && displacement>512)
 		displacement = 510;
 
 	if( $(this).attr('id') === $('div[data-role="page"]:last').attr('id') && displacement<-512)
-		displacement = 510;
+		displacement = -510;
 
 	$(this).css({
 		'-webkit-transform' : 'translateX('+displacement+'px)'
