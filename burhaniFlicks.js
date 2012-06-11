@@ -71,7 +71,7 @@ $(document).on('pageshow','.ui-page',function(){
 //touch begins here.
 }).on('touchstart','.ui-page',function(e){
 		startTracking.position = e.originalEvent.touches[0].pageX;
-		burhaniFlicks.isSwipe = true;
+		burhaniFlicks.isSwipe = false;
 		startTracking.time = (new Date()).getTime();
 		burhaniFlicks.prevTime = startTracking.time;
 		burhaniFlicks.velocityArr = [];
