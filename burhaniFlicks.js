@@ -253,6 +253,9 @@ $(document).on('pageshow','.ui-page',function(){
 }).on('rightflick', '.ui-page', function(){
 		var style = 'real'+burhaniFlicks.lastPositionOfPage;
 		console.log(style);
+		$(this).next().css({
+		'-webkit-transform' : ''
+		});
 		$.mobile.changePage($(this).prev(), { transition: style, reverse: false});
 
 //if it's a simple flick - change page
@@ -260,5 +263,8 @@ $(document).on('pageshow','.ui-page',function(){
 }).on('leftflick', '.ui-page', function(){
 		var style = 'real-'+(200-burhaniFlicks.lastPositionOfPage);
 		console.log(style);
+		$(this).prev().css({
+		'-webkit-transform' : ''
+		});
 		$.mobile.changePage($(this).next(), { transition: style, reverse: false});
 });
