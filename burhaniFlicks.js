@@ -33,6 +33,7 @@ burhaniFlicks.prevTime; //Used in touchmove.
 burhaniFlicks.varVelocity; //clean up later. should be local.
 burhaniFlicks.velocityArr = []; //This stores the objects velocity as it moves.
 burhaniFlicks.displacement; //This stores the pixels the object will move
+burhaniFlicks.lastPositionOfPage;
 
 /* PHYSICS LOTS OF HELP FROM LEO JWEDA */
 var u_k = 0.3;
@@ -176,6 +177,7 @@ $(document).on('pageshow','.ui-page',function(){
 				});
 				$(this).hide();
 				$(this).prev().hide();
+				var style = 'real'+burhaniFlicks.lastPositionOfPage;
 				$.mobile.changePage($nextPage, { transition: "fade", reverse: false});
 				return; //leave method.
 			}
@@ -195,15 +197,8 @@ $(document).on('pageshow','.ui-page',function(){
 			} //otherwise switch in positive direction.
 			else
 			{
-				$(this).css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).prev().css({
-				'-webkit-transform' : 'translateX('+displacement+'px)',
-				});
-				$(this).hide();
-				$(this).prev().hide();
-				$.mobile.changePage($prevPage, { transition: "fade", reverse: true});
+				var style = 'real'+burhaniFlicks.lastPositionOfPage;
+				$.mobile.changePage($prevPage, { transition: style, reverse: false});
 				return; //leave method.
 			}
 			console.log('we jumped out!');
@@ -276,6 +271,9 @@ $(document).on('pageshow','.ui-page',function(){
 	$(this).prev().css({
 		'-webkit-transform' : 'translateX('+displacement+'px)'
 	});
+	burhaniFlicks.lastPositionOfPage = $(this).offset().left;
+	var positionPage = 100-Math.round(((burhaniFlicks.lastPositionOfPage)/1024)*100);
+	burhaniFlicks.lastPositionOfPage = positionPage;
 	//if it's a simple flick - change page
 	//TODO: take velocity and changepage according to velocity speed.
 }).on('rightflick', '.ui-page', function(){
@@ -289,6 +287,9 @@ $(document).on('pageshow','.ui-page',function(){
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
+		var style = 'real'+burhaniFlicks.lastPositionOfPage;
+		console.log(style);
+		$.mobile.changePage($(this).prev(), { transition: style, reverse: false});
 
 //if it's a simple flick - change page
 //TODO: take velocity and changepage according to velocity speed.
