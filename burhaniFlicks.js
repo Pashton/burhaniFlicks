@@ -251,20 +251,48 @@ $(document).on('pageshow','.ui-page',function(){
 	//if it's a simple flick - change page
 	//TODO: take velocity and changepage according to velocity speed.
 }).on('rightflick', '.ui-page', function(){
+	if($(this).attr('id')!==$.mobile.firstPage.attr('id')){
 		var style = 'real'+burhaniFlicks.lastPositionOfPage;
 		console.log(style);
 		$(this).next().css({
 		'-webkit-transform' : ''
 		});
 		$.mobile.changePage($(this).prev(), { transition: style, reverse: false});
+	}
+	else
+	{
+		$(this).css({
+		'-webkit-transform' : ''
+		});
+		$(this).next().css({
+		'-webkit-transform' : ''
+		});
+		$(this).prev().css({
+		'-webkit-transform' : ''
+		});
+	}
 
 //if it's a simple flick - change page
 //TODO: take velocity and changepage according to velocity speed.
 }).on('leftflick', '.ui-page', function(){
+	if($(this).attr('id')!==$('div[data-role="page"]:last').attr('id')){
 		var style = 'real-'+(200-burhaniFlicks.lastPositionOfPage);
 		console.log(style);
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
 		$.mobile.changePage($(this).next(), { transition: style, reverse: false});
+	}
+	else
+	{
+		$(this).css({
+		'-webkit-transform' : ''
+		});
+		$(this).next().css({
+		'-webkit-transform' : ''
+		});
+		$(this).prev().css({
+		'-webkit-transform' : ''
+		});
+	}
 });
