@@ -5,7 +5,7 @@ Any damages this may cause, in any way, shape or form, the Author is free of the
 Created by Hasham Burhani.
 */
 /*
-Version: 0.2 - still a prototype. Use at your own risk.
+Version: 0.5.1 - still a prototype. Use at your own risk.
 */
 
 //BurhaniFlicks. global variables.
