@@ -269,13 +269,23 @@ $(document).on('pageshow','.ui-page',function(){
 		'-webkit-transform' : ''
 		});
 		console.log(1024-burhaniFlicks.offset);
-		$currentPage.attr('style','left='+burhaniFlicks.offset);
-		$currentPage.add($nextPage).animateWithCss({
-							left: '+='+(1024+burhaniFlicks.offset)+'px',
-							'-webkit-transform':'translate3d(0px,0px,0px)'
-						}, 4000, 'linear', function(){
+		//REVIEW
+		$(this).css({
+			left : burhaniFlicks.offset+'px',
+			position: 'absolute'
+		});
+		$nextPage.css({
+			left : '+='+burhaniFlicks.offset+'px',
+			position: 'absolute'
+		});
+
+		setTimeout(function(){
+			$currentPage.add($nextPage).animateWithCss({
+							left: '+='+(1024-burhaniFlicks.offset)+'px'
+						}, 100, 'linear', function(){
 							$.mobile.changePage($nextPage, { transition: 'switch', reverse: false});
 						});
+		},0.1);
 	}
 	else
 	{
@@ -307,13 +317,22 @@ $(document).on('pageshow','.ui-page',function(){
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
-		$currentPage.attr('style','left='+burhaniFlicks.offset+'px;');
-		$currentPage.add($nextPage).animateWithCss({
-							left: '-='+(1024-burhaniFlicks.offset)+'px',
-							'-webkit-transform':'translate3d(0px,0px,0px)'
-						}, 4000, 'linear', function(){
+
+		$(this).css({
+			left : burhaniFlicks.offset+'px',
+			position: 'absolute'
+		});
+		$nextPage.css({
+			left : '+='+burhaniFlicks.offset+'px',
+			position: 'absolute'
+		});
+		setTimeout(function(){
+			$currentPage.add($nextPage).animateWithCss({
+							left: '-='+(1024+burhaniFlicks.offset)+'px'
+						}, 100, 'linear', function(){
 							$.mobile.changePage($nextPage, { transition: 'switch', reverse: false});
 						});
+		},0.1);
 		
 	}
 	else
