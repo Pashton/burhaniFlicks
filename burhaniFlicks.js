@@ -34,6 +34,7 @@ burhaniFlicks.varVelocity; //clean up later. should be local.
 burhaniFlicks.velocityArr = []; //This stores the objects velocity as it moves.
 burhaniFlicks.displacement; //This stores the pixels the object will move
 burhaniFlicks.lastPositionOfPage;
+burhaniFlicks.offset;
 
 /* PHYSICS LOTS OF HELP FROM LEO JWEDA */
 var u_k = 0.3;
@@ -98,7 +99,7 @@ $(document).on('pageshow','.ui-page',function(){
 	$(this).trigger('drag');
 	// if(!burhaniFlicks.isSwipe)
 	// {
-	// 	$(this).trigger('drag');
+	//	$(this).trigger('drag');
 	// }
 
 //figure out what to do with touchend.
@@ -236,25 +237,29 @@ $(document).on('pageshow','.ui-page',function(){
 		displacement = -510;
 
 	$(this).css({
-		'-webkit-transform' : 'translateX('+displacement+'px)'
+		'-webkit-transform' : 'translate3d('+displacement+'px,0,0)'
 	});
 	$(this).next().css({
-		'-webkit-transform' : 'translateX('+displacement+'px)'
+		'-webkit-transform' : 'translate3d('+displacement+'px,0,0)'
 	});
 	$(this).prev().css({
-		'-webkit-transform' : 'translateX('+displacement+'px)'
+		'-webkit-transform' : 'translate3d('+displacement+'px,0,0)'
 	});
 	burhaniFlicks.lastPositionOfPage = $(this).offset().left;
+
+	console.log(burhaniFlicks.lastPositionOfPage);
+	burhaniFlicks.offset = burhaniFlicks.lastPositionOfPage;
 	var positionPage = 100-Math.round(((burhaniFlicks.lastPositionOfPage)/1024)*100);
 	burhaniFlicks.lastPositionOfPage = positionPage;
-	console.log('position: '+burhaniFlicks.lastPositionOfPage);
 	//if it's a simple flick - change page
 	//TODO: take velocity and changepage according to velocity speed.
 }).on('rightflick', '.ui-page', function(){
 	if($(this).attr('id')!==$.mobile.firstPage.attr('id')){
+		var $currentPage = $(this);
+		var $nextPage = $(this).prev();
 		var style = 'real'+burhaniFlicks.lastPositionOfPage;
 		console.log(style);
-				$(this).css({
+		$(this).css({
 		'-webkit-transform' : ''
 		});
 		$(this).next().css({
@@ -263,7 +268,14 @@ $(document).on('pageshow','.ui-page',function(){
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
-		$.mobile.changePage($(this).prev(), { transition: style, reverse: false});
+		console.log(1024-burhaniFlicks.offset);
+		$currentPage.attr('style','left='+burhaniFlicks.offset);
+		$currentPage.add($nextPage).animateWithCss({
+							left: '+='+(1024+burhaniFlicks.offset)+'px',
+							'-webkit-transform':'translate3d(0px,0px,0px)'
+						}, 4000, 'linear', function(){
+							$.mobile.changePage($nextPage, { transition: 'switch', reverse: false});
+						});
 	}
 	else
 	{
@@ -282,6 +294,8 @@ $(document).on('pageshow','.ui-page',function(){
 //TODO: take velocity and changepage according to velocity speed.
 }).on('leftflick', '.ui-page', function(){
 	if($(this).attr('id')!==$('div[data-role="page"]:last').attr('id')){
+		var $currentPage = $(this);
+		var $nextPage = $(this).next();
 		var style = 'real-'+(200-burhaniFlicks.lastPositionOfPage);
 		console.log(style);
 				$(this).css({
@@ -293,7 +307,14 @@ $(document).on('pageshow','.ui-page',function(){
 		$(this).prev().css({
 		'-webkit-transform' : ''
 		});
-		$.mobile.changePage($(this).next(), { transition: style, reverse: false});
+		$currentPage.attr('style','left='+burhaniFlicks.offset+'px;');
+		$currentPage.add($nextPage).animateWithCss({
+							left: '-='+(1024-burhaniFlicks.offset)+'px',
+							'-webkit-transform':'translate3d(0px,0px,0px)'
+						}, 4000, 'linear', function(){
+							$.mobile.changePage($nextPage, { transition: 'switch', reverse: false});
+						});
+		
 	}
 	else
 	{

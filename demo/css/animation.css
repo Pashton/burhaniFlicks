@@ -1,4 +1,24 @@
 /*realslide*/
+.switch.in
+{
+-webkit-transform: translate3d(0,0,0);
+-webkit-animation-name: switchl;
+}.switch.out
+{
+-webkit-transform: translateX(100%);
+-webkit-animation-name: switchr;
+}
+@-webkit-keyframes switchl
+{
+from { opacity:1;}
+to{ opacity:1;
+}
+}
+@-webkit-keyframes switchr{
+	from { opacity:1;}
+to{ opacity:1;
+}
+}
 .real0.in
 {
 -webkit-transform: translate3d(0,0,0);
